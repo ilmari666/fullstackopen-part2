@@ -1,13 +1,28 @@
-import React from 'react';
-import Note from './components/Note';
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      notes: props.notes
+    }
+  }
 
-const App = ({ notes }) => (
-    <div>
-      <h1>Muistiinpanot</h1>
-      <ul>
-        {notes.map(note => <Note key={note.id} note={note} />)}
-      </ul>
-    </div>
-  );
+  addNote = (event) => {
+    event.preventDefault()
+    console.log('nappia painettu')
+  }
 
-export default App;
+  render() {
+    return (
+      <div>
+        <h1>Muistiinpanot</h1>
+        <ul>
+          {this.state.notes.map(note => <Note key={note.id} note={note} />)}
+        </ul>
+        <form onSubmit={this.addNote}>
+          <input/>
+          <button type="submit">tallenna</button>
+        </form>
+      </div>
+    )
+  }
+}
