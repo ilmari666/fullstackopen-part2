@@ -8,10 +8,14 @@ class App extends React.Component {
     super(props);
     this.state = {
       persons: [
-        { name: 'Arto Hellas', number: '040-123456'},
+        { name: 'Arto Hellas', number: '040-123456' },
+        { name: 'Martti Tienari', number: '040-123456' },
+        { name: 'Arto Järvinen', number: '040-123456' },
+        { name: 'Lea Kutvonen', number: '040-123456' },
       ],
       newName: '',
       newNumber: '',
+      filter: '',
     };
   }
 
@@ -40,11 +44,18 @@ class App extends React.Component {
   }
 
   render() {
-    const { persons, newName, newNumber } = this.state;
+    const { persons, newName, newNumber, filter } = this.state;
+    const filteredContacts = !filter.length ? persons :
+      persons.filter(({ name }) =>
+        name.toLowerCase().indexOf(filter.toLowerCase()) === 0);
     return (
       <div>
         <h2>Puhelinluettelo</h2>
         <form onSubmit={this.submitForm()}>
+          <div>
+            rajaa: <input name="filter" onChange={this.onInputUpdate()} value={filter} />
+          </div>
+          <h2>Lisää uusi</h2>
           <div>
             nimi: <input name="newName" onChange={this.onInputUpdate()} value={newName} />
           </div>
@@ -56,7 +67,7 @@ class App extends React.Component {
           </div>
         </form>
         <h2>Numerot</h2>
-        {persons.map((contact) => <Contact key={contact.name} {...contact} />)}
+        {filteredContacts.map((contact) => <Contact key={contact.name} {...contact} />)}
       </div>
     );
   }
