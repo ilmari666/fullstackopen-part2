@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from './components/Button';
-import Contact from './components/Contact';
+import Contacts from './components/Contacts';
 import Input from './components/Input';
 
 
@@ -47,9 +47,7 @@ class App extends React.Component {
 
   render() {
     const { persons, newName, newNumber, filter } = this.state;
-    const filteredContacts = !filter.length ? persons :
-      persons.filter(({ name }) =>
-        name.toLowerCase().indexOf(filter.toLowerCase()) === 0);
+
     return (
       <div>
         <h2>Puhelinluettelo</h2>
@@ -60,8 +58,7 @@ class App extends React.Component {
           <Input label="numero:" name="newNumber" onChange={this.onInputUpdate()} value={newNumber} />
           <Button type="submit">lisää</Button>
         </form>
-        <h2>Numerot</h2>
-        {filteredContacts.map((contact) => <Contact key={contact.name} {...contact} />)}
+        <Contacts heading="Numerot" contacts={persons} filter={filter}/>
       </div>
     );
   }
