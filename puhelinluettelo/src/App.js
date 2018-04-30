@@ -21,10 +21,17 @@ class App extends React.Component {
   submitForm() {
     return (e) => {
       e.preventDefault();
-      this.setState(({ newName, persons }) => ({
-        newName: '',
-        persons: persons.concat([{ name: newName }]),
-      }));
+      this.setState((prevState) => {
+        const { newName, persons } = prevState;
+        const duplicate = persons.some(({ name }) => name === newName);
+        if (duplicate) {
+          return prevState;
+        }
+        return {
+          newName: '',
+          persons: persons.concat([{ name: newName }]),
+        };
+      });
     };
   }
 
@@ -42,7 +49,7 @@ class App extends React.Component {
           </div>
         </form>
         <h2>Numerot</h2>
-        {persons.map(person=><p key={person.name}>{person.name}</p>)}
+        {persons.map(person => <p key={person.name}>{person.name}</p>)}
       </div>
     );
   }
