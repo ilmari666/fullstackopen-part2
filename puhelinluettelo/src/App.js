@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from './components/Button';
 import Contact from './components/Contact';
+import Input from './components/Input';
 
 
 class App extends React.Component {
@@ -37,6 +38,7 @@ class App extends React.Component {
         }
         return {
           newName: '',
+          newNumber: '',
           persons: persons.concat({ name: newName, number: newNumber }),
         };
       });
@@ -52,19 +54,11 @@ class App extends React.Component {
       <div>
         <h2>Puhelinluettelo</h2>
         <form onSubmit={this.submitForm()}>
-          <div>
-            rajaa: <input name="filter" onChange={this.onInputUpdate()} value={filter} />
-          </div>
+          <Input label="rajaa:" name="filter" onChange={this.onInputUpdate()} value={filter} />
           <h2>Lisää uusi</h2>
-          <div>
-            nimi: <input name="newName" onChange={this.onInputUpdate()} value={newName} />
-          </div>
-          <div>
-            numero: <input name="newNumber" onChange={this.onInputUpdate()} value={newNumber} />
-          </div>
-          <div>
-            <Button type="submit">lisää</Button>
-          </div>
+          <Input label="nimi:" name="newName" onChange={this.onInputUpdate()} value={newName} />
+          <Input label="numero:" name="newNumber" onChange={this.onInputUpdate()} value={newNumber} />
+          <Button type="submit">lisää</Button>
         </form>
         <h2>Numerot</h2>
         {filteredContacts.map((contact) => <Contact key={contact.name} {...contact} />)}
