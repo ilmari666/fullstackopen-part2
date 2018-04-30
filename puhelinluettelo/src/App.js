@@ -12,28 +12,37 @@ class App extends React.Component {
     };
   }
 
+  onInputUpdate() {
+    return (e) => {
+      this.setState({ newName: e.target.value });
+    };
+  }
+
+  submitForm() {
+    return (e) => {
+      e.preventDefault();
+      this.setState(({ newName, persons }) => ({
+        newName: '',
+        persons: persons.concat([{ name: newName }]),
+      }));
+    };
+  }
+
   render() {
+    const { persons, newName } = this.state;
     return (
       <div>
         <h2>Puhelinluettelo</h2>
-        <form onSubmit={(e)=>{
-          e.preventDefault();
-          e.persist()
-          console.log(e);
-        }}>
+        <form onSubmit={this.submitForm()}>
           <div>
-          nimi: <input name="name" onInput={(e) => { console.log(e); e.persist()}} />
+            nimi: <input name="name" onChange={this.onInputUpdate()} value={newName} />
           </div>
           <div>
-            <Button
-              type="submit"
-              >
-            lisää
-            </Button>
+            <Button type="submit">lisää</Button>
           </div>
         </form>
         <h2>Numerot</h2>
-        ...
+        {persons.map(person=><p key={person.name}>{person.name}</p>)}
       </div>
     );
   }
