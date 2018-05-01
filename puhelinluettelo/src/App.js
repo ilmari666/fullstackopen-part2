@@ -1,9 +1,9 @@
 import React from 'react';
-import axios from 'axios';
+
+import personsService from './services/persons'
 import Button from './components/Button';
 import Contacts from './components/Contacts';
 import Input from './components/Input';
-
 
 class App extends React.Component {
   constructor(props) {
@@ -22,26 +22,22 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    axios.get('http://localhost:3001/persons').then(result => {
-      const { data: persons } = result;
-      this.setState({persons});
-    });
+   personsService.getAll()
+    .then(persons=>this.setState({persons}));
   }
 
   submitForm = (e) => {
-      e.preventDefault();
-      this.setState((prevState) => {
-        const { newName, persons, newNumber } = prevState;
-        const duplicate = persons.some(({ name }) => name === newName);
-        if (duplicate) {
-          return prevState;
-        }
-        return {
+    e.preventDefault();
+    const { newName : name, newNumber : number, persons } = this.state;
+    const contact = { name, number };
+
+    personsService.createPerson(contact)
+      .then(person =>
+        this.setState( {
           newName: '',
           newNumber: '',
-          persons: persons.concat({ name: newName, number: newNumber, id: persons.length + 1 }),
-        };
-      });
+          persons: persons.concat(person),
+        }))
     };
 
 
@@ -53,7 +49,7 @@ class App extends React.Component {
       <div>
         <h2>Puhelinluettelo</h2>
         <form onSubmit={this.submitForm}>
-          <Input label="find countries:" name="filter" onChange={this.onInputUpdate} value={filter} />
+          <Input label="hae:" name="filter" onChange={this.onInputUpdate} value={filter} />
           <h2>Lisää uusi</h2>
           <Input label="nimi:" name="newName" onChange={this.onInputUpdate} value={newName} />
           <Input label="numero:" name="newNumber" onChange={this.onInputUpdate} value={newNumber} />
