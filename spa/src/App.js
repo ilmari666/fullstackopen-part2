@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import noteService from './services/notes'
 import Note from './components/Note';
 
 class App extends React.Component {
@@ -20,42 +21,44 @@ class App extends React.Component {
       date: new Date(),
       important: Math.random() > 0.5
     }
-    axios.post('http://localhost:3001/notes', noteObject)
-      .then(response => {
-        this.setState({
-          notes: this.state.notes.concat(response.data),
-          newNote: ''
-        })
-      });
-  }
+    noteService
+      .create(noteObject)
+      .then(() => noteService.getAll()
+        .then(notes=>
+          this.setState({
+            notes,
+            newNote: ''
+          })
+        )
+      )
+    };
 
   handleNoteChange = ({target})=>{
     const { value: newNote } = target;
     this.setState({newNote});
   }
+
   toggleImportanceOf = (id) => {
     return () => {
       const url = `http://localhost:3001/notes/${id}`
       const note = this.state.notes.find(n => n.id === id)
       const changedNote = { ...note, important: !note.important }
   
-      axios
-        .put(url, changedNote)
-        .then(response => {
-          this.setState({
-            notes: this.state.notes.map(note => note.id !== id ? note : changedNote)
+      noteService
+        .update(id, changedNote)
+        .then(()=>noteService.getAll()
+          .then(notes => {
+            this.setState({
+              notes: notes.map(note => note.id !== id ? note : changedNote)
+            })
           })
-        })
-    }
-  }
+        );
+      }
+  };
+
   componentDidMount() {
-    console.log('will mount');
-    axios
-      .get('http://localhost:3001/notes')
-      .then((response) => {
-        console.log('promise fulfilled');
-        this.setState({ notes: response.data });
-      });
+    noteService
+      .getAll().then(notes => this.setState({notes}));
   }
   toggleVisible = () => {
     this.setState({ showAll: !this.state.showAll })
