@@ -1,7 +1,7 @@
 import React from 'react';
 import Contact from './Contact';
 
-const Contacts = ({ heading, contacts, filter }) => {
+const Contacts = ({ heading, contacts, filter, remove }) => {
   if (contacts.length === 0) {
     return null;
   }
@@ -10,7 +10,7 @@ const Contacts = ({ heading, contacts, filter }) => {
       name.toLowerCase().indexOf(filter.toLowerCase()) === 0);
   return (<div>
     <h2>{heading}</h2>
-    {filteredContacts.map(contact => <Contact key={contact.id} {...contact} />)}
+    {filteredContacts.map(contact => <Contact key={contact.id} {...contact} remove={remove}/>)}
   </div>);
 }
 

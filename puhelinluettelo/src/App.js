@@ -37,10 +37,21 @@ class App extends React.Component {
           newName: '',
           newNumber: '',
           persons: persons.concat(person),
-        }))
-    };
+        })
+      )
+  };
+  confirmRemoval = (id, name) => () => {
+    if (window.confirm(`poistetaanko ${name}?`)){
+      this.deletePerson(id);
+    }
+  }
 
-
+  deletePerson = (id)=>{
+    personsService.removePerson(id).then(()=>{
+      const persons = this.state.persons.filter(person=>person.id !== id);
+      this.setState({ persons });
+    })
+  };
 
   render() {
     const { persons, newName, newNumber, filter } = this.state;
@@ -55,7 +66,7 @@ class App extends React.Component {
           <Input label="numero:" name="newNumber" onChange={this.onInputUpdate} value={newNumber} />
           <Button type="submit">lisää</Button>
         </form>
-        <Contacts heading="Numerot" contacts={persons} filter={filter} />
+        <Contacts heading="Numerot" contacts={persons} filter={filter} remove={this.confirmRemoval}/>
       </div>
     );
   }

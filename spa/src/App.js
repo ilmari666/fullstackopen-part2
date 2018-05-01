@@ -23,7 +23,7 @@ class App extends React.Component {
     }
     noteService
       .create(noteObject)
-      .then(() => noteService.getAll()
+      .then(noteService.getAll()
         .then(notes=>
           this.setState({
             notes,
@@ -40,21 +40,23 @@ class App extends React.Component {
 
   toggleImportanceOf = (id) => {
     return () => {
-      const url = `http://localhost:3001/notes/${id}`
       const note = this.state.notes.find(n => n.id === id)
       const changedNote = { ...note, important: !note.important }
   
       noteService
         .update(id, changedNote)
-        .then(()=>noteService.getAll()
-          .then(notes => {
-            this.setState({
-              notes: notes.map(note => note.id !== id ? note : changedNote)
-            })
+        .then(changedNote => {
+          const notes = this.state.notes.filter(n => n.id !== id)
+          this.setState({
+            notes: notes.concat(changedNote)
           })
-        );
-      }
-  };
+        })
+        .catch(error => {
+          alert(`muistiinpano '${note.content}' on jo valitettavasti poistettu palvelimelta`)
+          this.setState({ notes: this.state.notes.filter(n => n.id !== id) })
+        })
+    }
+  }
 
   componentDidMount() {
     noteService
