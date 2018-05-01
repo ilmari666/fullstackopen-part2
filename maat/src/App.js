@@ -1,19 +1,37 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import axios from 'axios';
+import Input from './components/Input';
+import FilteredCountries from './components/FilteredCountries';
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      results: [],
+      filter: '',
+    };
+  }
+
+  onInputUpdate = (e) => {
+    const { value, name } = e.target;
+    this.setState({ [name]: value });
+  };
+
+  componentDidMount() {
+    axios.get('https://restcountries.eu/rest/v2/all').then(result => {
+      const { data: countries } = result;
+      this.setState({countries});
+    });
+  }
+
+
   render() {
+    const { filter, countries } = this.state;
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <form onSubmit={this.submitForm}>
+      <Input label="rajaa:" name="filter" onChange={this.onInputUpdate} value={filter} />
+      <FilteredCountries filter={filter} countries={countries} /> 
+    </form>
     );
   }
 }

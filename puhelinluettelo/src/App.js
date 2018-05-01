@@ -53,7 +53,7 @@ class App extends React.Component {
       <div>
         <h2>Puhelinluettelo</h2>
         <form onSubmit={this.submitForm}>
-          <Input label="rajaa:" name="filter" onChange={this.onInputUpdate} value={filter} />
+          <Input label="find countries:" name="filter" onChange={this.onInputUpdate} value={filter} />
           <h2>Lisää uusi</h2>
           <Input label="nimi:" name="newName" onChange={this.onInputUpdate} value={newName} />
           <Input label="numero:" name="newNumber" onChange={this.onInputUpdate} value={newNumber} />
