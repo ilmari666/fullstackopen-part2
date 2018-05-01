@@ -17,6 +17,8 @@ class App extends Component {
     this.setState({ [name]: value });
   };
 
+  getSetFilter = filter => () => this.setState({filter});
+
   componentDidMount() {
     axios.get('https://restcountries.eu/rest/v2/all').then(result => {
       const { data: countries } = result;
@@ -30,7 +32,7 @@ class App extends Component {
     return (
       <form onSubmit={this.submitForm}>
       <Input label="rajaa:" name="filter" onChange={this.onInputUpdate} value={filter} />
-      <FilteredCountries filter={filter} countries={countries} /> 
+      <FilteredCountries filter={filter} countries={countries} onClick={this.getSetFilter}/> 
     </form>
     );
   }
