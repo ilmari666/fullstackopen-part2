@@ -30,15 +30,32 @@ class App extends React.Component {
     e.preventDefault();
     const { newName : name, newNumber : number, persons } = this.state;
     const contact = { name, number };
+    const existingContact = persons.find((contact)=>contact.name === name);
 
-    personsService.createPerson(contact)
-      .then(person =>
-        this.setState( {
-          newName: '',
-          newNumber: '',
-          persons: persons.concat(person),
-        })
-      )
+    if (existingContact){
+      // CONFIRM then  update exiting contact
+      const id = existingContact.id;
+      if (window.confirm(`${name} on jo luettelossa. Korvataanko vanha numero uudella?`)){
+        personsService.updatePerson(contact, id)
+          .then(updatedContact =>
+            this.setState( {
+              newName: '',
+              newNumber: '',
+              persons: persons.map(person=>person.id === id ? updatedContact : person),
+            })
+          )
+      }
+    } else {
+      // create new contact
+      personsService.createPerson(contact)
+        .then(person =>
+          this.setState( {
+            newName: '',
+            newNumber: '',
+            persons: persons.concat(person),
+          })
+        )
+      }
   };
   confirmRemoval = (id, name) => () => {
     if (window.confirm(`poistetaanko ${name}?`)){
